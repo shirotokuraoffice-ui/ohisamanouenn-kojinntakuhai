@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お日さま農園｜農園からのお知らせ</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; background: #fffdf7; color: #333; margin: 0; padding: 16px; }
+    .header { background: #ef6c00; color: #fff; padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 16px; }
+    .header h1 { margin: 0; font-size: 19px; }
+    .card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: 1px solid #ffe0b2; }
+    .badge { display: inline-block; background: #e65100; color: #fff; font-size: 12px; font-weight: bold; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px; }
+    .content { font-size: 15px; line-height: 1.7; white-space: pre-wrap; }
+    .updated { text-align: right; font-size: 12px; color: #888; margin-top: 10px; }
+    .nav-btn { display: block; text-align: center; background: #ef6c00; color: #fff; text-decoration: none; font-weight: bold; padding: 12px; border-radius: 10px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📢 農園からのお知らせ</h1>
+  </div>
+
+  <div class="card">
+    <span class="badge" id="period">最新のお知らせ</span>
+    <div id="notice" class="content">お知らせを読み込んでいます...</div>
+    <div id="updated" class="updated"></div>
+  </div>
+
+  <a href="index.html" class="nav-btn">☀️ 今週のお届け野菜を見る</a>
+
+  <script>
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxNiiwxSOFLAhVMbA79EUfHlK6khajWAhkW1Tyj7c-yKjTRkiHuGfqWGwyvPYT1W_5_/exec";
+
+    fetch(GAS_API_URL)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('period').textContent = data.period || '最新情報';
+        document.getElementById('notice').textContent = (data.notice || '') + '\n\n' + (data.message || '');
+        document.getElementById('updated').textContent = '最終更新: ' + (data.updatedAt || '');
+      })
+      .catch(() => {
+        document.getElementById('notice').textContent = '現在、情報を更新中です。';
+      });
+  </script>
+</body>
+</html>

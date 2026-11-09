@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お日さま農園｜今週のお届け野菜</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif; background: #fffdf7; color: #333; margin: 0; padding: 16px; }
+    .header { background: linear-gradient(135deg, #ef6c00, #ff9800); color: #fff; padding: 18px 16px; border-radius: 14px; text-align: center; margin-bottom: 16px; box-shadow: 0 3px 8px rgba(239,108,0,0.2); }
+    .header h1 { margin: 0; font-size: 20px; letter-spacing: 0.5px; }
+    .header p { margin: 8px 0 0; font-size: 14px; background: rgba(255,255,255,0.2); display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; }
+    .card { background: #fff; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: 1px solid #ffe0b2; }
+    .card-title { font-weight: bold; color: #e65100; font-size: 16px; margin-bottom: 12px; border-bottom: 2px solid #ffe0b2; padding-bottom: 6px; }
+    .veg-item { padding: 12px; background: #f1f8e9; border-left: 5px solid #4caf50; border-radius: 6px; margin-bottom: 8px; font-weight: bold; font-size: 15px; color: #1b5e20; }
+    .notice { background: #fff3e0; border-left: 5px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 14px; line-height: 1.6; }
+    .updated { text-align: right; font-size: 12px; color: #888; margin-top: 8px; }
+    .nav-btn { display: block; text-align: center; background: #ef6c00; color: #fff; text-decoration: none; font-weight: bold; padding: 12px; border-radius: 10px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>☀️ お日さま農園 畑だより</h1>
+    <p id="period">読み込み中...</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌱 西尾からのひとこと</div>
+    <div id="message" style="font-size:15px; line-height:1.6;">最新の畑だよりを読み込んでいます...</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🧺 今週のセットに入る予定の野菜</div>
+    <div id="veg-list"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🚚 配達・スケジュールのお知らせ</div>
+    <div id="notice" class="notice"></div>
+    <div id="updated" class="updated"></div>
+  </div>
+
+  <a href="guide.html" class="nav-btn">📖 ご利用ガイド・よくある質問を見る</a>
+
+  <script>
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxNiiwxSOFLAhVMbA79EUfHlK6khajWAhkW1Tyj7c-yKjTRkiHuGfqWGwyvPYT1W_5_/exec";
+
+    fetch(GAS_API_URL)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('period').textContent = data.period || '今週のお届け';
+        document.getElementById('message').textContent = data.message || '';
+        document.getElementById('notice').textContent = data.notice || '';
+        document.getElementById('updated').textContent = '最終更新: ' + (data.updatedAt || '');
+        const listEl = document.getElementById('veg-list');
+        listEl.innerHTML = '';
+        (data.vegetables || []).forEach(v => {
+          const div = document.createElement('div');
+          div.className = 'veg-item';
+          div.textContent = '🥕 ' + v;
+          listEl.appendChild(div);
+        });
+      })
+      .catch(() => {
+        document.getElementById('message').textContent = '現在、情報を更新中です。しばらく経ってから再度開いてください。';
+      });
+  </script>
+</body>
+</html>
